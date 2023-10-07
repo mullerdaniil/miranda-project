@@ -4,9 +4,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox alignment="TOP_CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.mullerdaniil.miranda.ui.controller.ProgressTrackingController">
+<VBox alignment="TOP_CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.github.mullerdaniil.miranda.ui.controller.ProgressTrackingController">
     <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
 
     <TabPane tabClosingPolicy="UNAVAILABLE">
@@ -35,7 +37,7 @@
                             <top>5</top>
                         </Insets>
                     </VBox.margin>
-                    <TextField fx:id="progressPointProgressTextField" />
+                    <TextField fx:id="progressPointProgressTextField"/>
                     <Button onAction="#onNewProgressPointButton" style="-fx-background-color: -color-accent-muted;">
                         Create Progress Point
                     </Button>
@@ -54,7 +56,8 @@
                         </Insets>
                     </VBox.margin>
                 </ListView>
-                <Button onAction="#onNewTrackButton" style="-fx-background-color: -color-accent-muted;" text="New track">
+                <Button onAction="#onNewTrackButton" style="-fx-background-color: -color-accent-muted;"
+                        text="New track">
                 </Button>
             </VBox>
         </Tab>

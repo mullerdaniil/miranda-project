@@ -8,6 +8,14 @@ All notable changes to this project will be documented in this file.
 mark answers to them as memorized.
 - Monitoring tools for services.
 
+
+## [0.2.1] - 2023-10-07
+
+### Changed
+
+- Changed the creation date output format of Progress Points from "{2023.10.07-12:56}" to "{07.10.23-12:56}".
+
+
 ## [0.2.0] - 2023-10-07
 
 ### Added
