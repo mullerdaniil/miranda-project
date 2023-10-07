@@ -22,10 +22,6 @@ public class HourSessionService {
         return hourSessionRepository.findHourSessionsByDateOrderById(date);
     }
 
-    public List<HourSession> findCompletedByDate(LocalDate date) {
-        return hourSessionRepository.findHourSessionsByDateAndCompletedTrueOrderById(date);
-    }
-
     public List<HourSession> findCompetedByDateSpan(LocalDate start, LocalDate end) {
         return hourSessionRepository.findHourSessionsByDateBetweenAndCompletedTrueOrderById(start, end);
     }

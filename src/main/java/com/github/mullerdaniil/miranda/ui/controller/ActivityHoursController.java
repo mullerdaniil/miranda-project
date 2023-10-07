@@ -46,11 +46,8 @@ public class ActivityHoursController {
 
     public void initialize() {
         datePicker.setValue(LocalDate.now());
-
         applicationEventPublisher.publishEvent(new ActivityDataUpdatedEvent(this));
         applicationEventPublisher.publishEvent(new HourSessionDataUpdatedEvent(this));
-//        refreshActivityNames();
-//        refreshHourSessions();
         hourSessionsListView.setCellFactory(new HourSessionsListViewCellFactory());
         hourSessionsListView.setOnKeyPressed(new HourSessionsListViewKeyListener());
         activityNamesListView.setOnKeyPressed(new ActivityNamesListViewKeyListener());
@@ -70,9 +67,7 @@ public class ActivityHoursController {
 
             try {
                 activityService.create(activityName);
-
                 applicationEventPublisher.publishEvent(new ActivityDataUpdatedEvent(this));
-//                refreshActivityNames();
             } catch (ActivityServiceException e) {
                 showErrorMessage(e);
             }
@@ -107,7 +102,6 @@ public class ActivityHoursController {
             hourSessionService.delete(selectedHourSession.getId());
 
             applicationEventPublisher.publishEvent(new HourSessionDataUpdatedEvent(this));
-//            refreshHourSessions();
         }
     }
 
@@ -116,7 +110,6 @@ public class ActivityHoursController {
         activityService.delete(activityName);
 
         applicationEventPublisher.publishEvent(new ActivityDataUpdatedEvent(this));
-//        refreshActivityNames();
     }
 
     @EventListener(ActivityDataUpdatedEvent.class)

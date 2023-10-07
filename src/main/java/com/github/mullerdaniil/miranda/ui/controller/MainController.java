@@ -6,5 +6,4 @@ import org.springframework.stereotype.Component;
 @FxmlView("Main.fxml")
 @Component
 public class MainController {
-
 }
