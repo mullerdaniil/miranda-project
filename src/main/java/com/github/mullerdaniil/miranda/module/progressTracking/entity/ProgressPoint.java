@@ -22,6 +22,9 @@ public class ProgressPoint {
     @Column(nullable = false)
     private Integer progress;
 
+    @ManyToOne(optional = false)
+    private Track track;
+
     @CreationTimestamp
     private ZonedDateTime creationTime;
 }

@@ -21,8 +21,15 @@ public class Track {
 
     @Column(nullable = false, unique = true)
     private String name;
-    
+
+    @Column(nullable = false)
     private Integer totalProgress;
+
+    @Column(nullable = false)
+    private String unit;
+
+    @Column(nullable = false)
+    private ZonedDateTime lastUpdateTime;
 
     @CreationTimestamp
     private ZonedDateTime creationTime;

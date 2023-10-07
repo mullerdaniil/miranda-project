@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2023-10-07
+
+### Added
+
+- JavaFx implementation of Progress Tracking Service, which allows users to track activities,
+create progress points associated with them.
+
+
 ## [0.1.0] - 2023-10-05
 
 ### Added

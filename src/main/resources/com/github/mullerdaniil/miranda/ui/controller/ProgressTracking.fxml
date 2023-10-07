@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="TOP_CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.mullerdaniil.miranda.ui.controller.ProgressTrackingController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+
+    <TabPane tabClosingPolicy="UNAVAILABLE">
+        <Tab text="Activity">
+            <VBox>
+                <Label text="Progress Points">
+                    <VBox.margin>
+                        <Insets>
+                            <top>10</top>
+                        </Insets>
+                    </VBox.margin>
+                </Label>
+                <ListView fx:id="progressPointsListView">
+                </ListView>
+                <ProgressBar fx:id="trackProgressBar" minHeight="15.0" prefWidth="Infinity">
+                    <VBox.margin>
+                        <Insets>
+                            <top>5</top>
+                            <bottom>5</bottom>
+                        </Insets>
+                    </VBox.margin>
+                </ProgressBar>
+                <HBox spacing="10">
+                    <VBox.margin>
+                        <Insets>
+                            <top>5</top>
+                        </Insets>
+                    </VBox.margin>
+                    <TextField fx:id="progressPointProgressTextField" />
+                    <Button onAction="#onNewProgressPointButton" style="-fx-background-color: -color-accent-muted;">
+                        Create Progress Point
+                    </Button>
+                </HBox>
+                <Label text="Tracks">
+                    <VBox.margin>
+                        <Insets>
+                            <top>10</top>
+                        </Insets>
+                    </VBox.margin>
+                </Label>
+                <ListView fx:id="tracksListView">
+                    <VBox.margin>
+                        <Insets>
+                            <bottom>10</bottom>
+                        </Insets>
+                    </VBox.margin>
+                </ListView>
+                <Button onAction="#onNewTrackButton" style="-fx-background-color: -color-accent-muted;" text="New track">
+                </Button>
+            </VBox>
+        </Tab>
+        <Tab text="Monitoring">
+            <!--            todo: create monitoring .fxml-->
+        </Tab>
+    </TabPane>
+</VBox>
