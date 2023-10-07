@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 - JavaFx implementation of Question Training Service, which allows users to create questions,
 mark answers to them as memorized.
 - Monitoring tools for services.
+- Icon and title of the application window.
 
 
 ## [0.2.1] - 2023-10-07
