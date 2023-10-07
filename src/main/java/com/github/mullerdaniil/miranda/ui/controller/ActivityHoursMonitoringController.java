@@ -75,7 +75,7 @@ public class ActivityHoursMonitoringController {
     private class DatePickerChangeListener implements ChangeListener<LocalDate> {
         @Override
         public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) {
-            applicationEventPublisher.publishEvent(new MonitoringParametersUpdatedEvent(this));
+            applicationEventPublisher.publishEvent(new MonitoringParametersUpdatedEvent());
         }
     }
 }
