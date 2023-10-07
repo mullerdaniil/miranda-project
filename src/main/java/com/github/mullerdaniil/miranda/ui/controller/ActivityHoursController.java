@@ -3,12 +3,14 @@ package com.github.mullerdaniil.miranda.ui.controller;
 import atlantafx.base.controls.RingProgressIndicator;
 import com.github.mullerdaniil.miranda.module.activityHours.entity.Activity;
 import com.github.mullerdaniil.miranda.module.activityHours.entity.HourSession;
+import com.github.mullerdaniil.miranda.module.activityHours.event.ActivityDataUpdatedEvent;
+import com.github.mullerdaniil.miranda.module.activityHours.event.HourSessionDataUpdatedEvent;
 import com.github.mullerdaniil.miranda.module.activityHours.exception.ActivityServiceException;
 import com.github.mullerdaniil.miranda.module.activityHours.exception.HourSessionServiceException;
 import com.github.mullerdaniil.miranda.module.activityHours.service.ActivityService;
 import com.github.mullerdaniil.miranda.module.activityHours.service.HourSessionService;
-import com.github.mullerdaniil.miranda.ui.event.ActivityDataUpdatedEvent;
-import com.github.mullerdaniil.miranda.ui.event.HourSessionDataUpdatedEvent;
+import com.github.mullerdaniil.miranda.ui.event.ActivityDataRefreshRequestEvent;
+import com.github.mullerdaniil.miranda.ui.event.HourSessionDataRefreshRequestEvent;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -30,7 +32,7 @@ import static javafx.collections.FXCollections.observableArrayList;
 public class ActivityHoursController {
     private final ActivityService activityService;
     private final HourSessionService hourSessionService;
-    private final ApplicationEventPublisher applicationEventPublisher;
+    private final ApplicationEventPublisher eventPublisher;
 
     @FXML
     private DatePicker datePicker;
@@ -46,8 +48,8 @@ public class ActivityHoursController {
 
     public void initialize() {
         datePicker.setValue(LocalDate.now());
-        applicationEventPublisher.publishEvent(new ActivityDataUpdatedEvent(this));
-        applicationEventPublisher.publishEvent(new HourSessionDataUpdatedEvent(this));
+        eventPublisher.publishEvent(new ActivityDataRefreshRequestEvent());
+        eventPublisher.publishEvent(new HourSessionDataRefreshRequestEvent());
         hourSessionsListView.setCellFactory(new HourSessionsListViewCellFactory());
         hourSessionsListView.setOnKeyPressed(new HourSessionsListViewKeyListener());
         activityNamesListView.setOnKeyPressed(new ActivityNamesListViewKeyListener());
@@ -67,52 +69,16 @@ public class ActivityHoursController {
 
             try {
                 activityService.create(activityName);
-                applicationEventPublisher.publishEvent(new ActivityDataUpdatedEvent(this));
             } catch (ActivityServiceException e) {
                 showErrorMessage(e);
             }
         }
     }
 
-    private void setSelectedHourSessionCompleted() {
-        var selectedHourSession = hourSessionsListView.getSelectionModel().getSelectedItem();
-        hourSessionService.reverseCompleted(selectedHourSession);
-
-        applicationEventPublisher.publishEvent(new HourSessionDataUpdatedEvent(this));
-//        refreshHourSessions();
-    }
-
-    private void createHourSession() {
-        var activityName = activityNamesListView.getSelectionModel().getSelectedItem();
-        var date = datePicker.getValue();
-
-        try {
-            hourSessionService.create(activityName, date);
-
-            applicationEventPublisher.publishEvent(new HourSessionDataUpdatedEvent(this));
-//        refreshHourSessions();
-        } catch (HourSessionServiceException e) {
-            showErrorMessage(e);
-        }
-    }
-
-    private void deleteHourSession() {
-        var selectedHourSession = hourSessionsListView.getSelectionModel().getSelectedItem();
-        if (selectedHourSession != null) {
-            hourSessionService.delete(selectedHourSession.getId());
-
-            applicationEventPublisher.publishEvent(new HourSessionDataUpdatedEvent(this));
-        }
-    }
-
-    private void deleteActivity() {
-        var activityName = activityNamesListView.getSelectionModel().getSelectedItem();
-        activityService.delete(activityName);
-
-        applicationEventPublisher.publishEvent(new ActivityDataUpdatedEvent(this));
-    }
-
-    @EventListener(ActivityDataUpdatedEvent.class)
+    @EventListener({
+            ActivityDataUpdatedEvent.class,
+            ActivityDataRefreshRequestEvent.class
+    })
     public void refreshActivityNames() {
         var activityNames = activityService.findAll()
                 .stream()
@@ -123,12 +89,43 @@ public class ActivityHoursController {
         activityNamesListView.refresh();
     }
 
-    @EventListener(HourSessionDataUpdatedEvent.class)
+    @EventListener({
+            HourSessionDataUpdatedEvent.class,
+            HourSessionDataRefreshRequestEvent.class
+    })
     public void refreshHourSessions() {
         var hourSessions = hourSessionService.findByDate(datePicker.getValue());
         hourSessionsListView.setItems(observableArrayList(hourSessions));
         refreshHourSessionsProgressIndicator();
         hourSessionsListView.refresh();
+    }
+
+    private void setSelectedHourSessionCompleted() {
+        var selectedHourSession = hourSessionsListView.getSelectionModel().getSelectedItem();
+        hourSessionService.reverseCompleted(selectedHourSession);
+    }
+
+    private void createHourSession() {
+        var activityName = activityNamesListView.getSelectionModel().getSelectedItem();
+        var date = datePicker.getValue();
+
+        try {
+            hourSessionService.create(activityName, date);
+        } catch (HourSessionServiceException e) {
+            showErrorMessage(e);
+        }
+    }
+
+    private void deleteHourSession() {
+        var selectedHourSession = hourSessionsListView.getSelectionModel().getSelectedItem();
+        if (selectedHourSession != null) {
+            hourSessionService.delete(selectedHourSession.getId());
+        }
+    }
+
+    private void deleteActivity() {
+        var activityName = activityNamesListView.getSelectionModel().getSelectedItem();
+        activityService.delete(activityName);
     }
 
     private void refreshHourSessionsProgressIndicator() {
@@ -171,11 +168,9 @@ public class ActivityHoursController {
     private class DatePickerChangeListener implements ChangeListener<LocalDate> {
         @Override
         public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) {
-            applicationEventPublisher.publishEvent(new HourSessionDataUpdatedEvent(this));
-//            refreshHourSessions();
+            eventPublisher.publishEvent(new HourSessionDataRefreshRequestEvent());
         }
     }
-
 
     private class HourSessionsListViewCellFactory implements Callback<ListView<HourSession>, ListCell<HourSession>> {
         @Override

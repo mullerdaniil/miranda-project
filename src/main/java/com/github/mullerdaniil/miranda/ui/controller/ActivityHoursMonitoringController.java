@@ -1,7 +1,8 @@
 package com.github.mullerdaniil.miranda.ui.controller;
 
 import com.github.mullerdaniil.miranda.module.activityHours.service.HourSessionService;
-import com.github.mullerdaniil.miranda.ui.event.HourSessionDataUpdatedEvent;
+import com.github.mullerdaniil.miranda.module.activityHours.event.HourSessionDataUpdatedEvent;
+import com.github.mullerdaniil.miranda.ui.event.HourSessionDataRefreshRequestEvent;
 import com.github.mullerdaniil.miranda.ui.event.MonitoringParametersUpdatedEvent;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -46,6 +47,7 @@ public class ActivityHoursMonitoringController {
 
     @EventListener({
             HourSessionDataUpdatedEvent.class,
+            HourSessionDataRefreshRequestEvent.class,
             MonitoringParametersUpdatedEvent.class
     })
     public void drawChart() {
