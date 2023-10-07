@@ -288,7 +288,7 @@ public class ProgressTrackingController {
                     } else {
                         setText("%s\t{%s}".formatted(
                                 progressPoint.getProgress(),
-                                progressPoint.getCreationTime().format(DateTimeFormatter.ofPattern("yyyy.MM.dd-HH:mm")))
+                                progressPoint.getCreationTime().format(DateTimeFormatter.ofPattern("dd.MM.yy-HH:mm")))
                         );
                     }
                 }
