@@ -29,7 +29,7 @@ public class HourSessionService {
         return hourSessionRepository.findHourSessionsByDateBetweenAndCompletedTrueOrderById(start, end);
     }
 
-    public Integer create(String activityName, LocalDate date) {
+    public void create(String activityName, LocalDate date) {
         var maybeActivity = activityRepository.findByName(activityName);
         if (maybeActivity.isEmpty()) {
             throw new HourSessionServiceException("Unable to create the HourSession: activity not found.");
@@ -42,8 +42,6 @@ public class HourSessionService {
 
         hourSessionRepository.saveAndFlush(hourSession);
         eventPublisher.publishEvent(new HourSessionDataUpdatedEvent());
-
-        return hourSession.getId();
     }
 
     public void reverseCompleted(HourSession hourSession) {

@@ -41,7 +41,7 @@ public class ProgressPointService {
                 .build();
 
         progressPointRepository.saveAndFlush(progressPoint);
-        applicationEventPublisher.publishEvent(new TrackDataUpdatedEvent(track.getId(), true));
+        applicationEventPublisher.publishEvent(new TrackDataUpdatedEvent(track.getId(), false));
     }
 
     public void deleteById(Integer id) {

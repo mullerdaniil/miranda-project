@@ -18,7 +18,7 @@ public class ActivityService {
     private final ActivityRepository activityRepository;
     private final ApplicationEventPublisher eventPublisher;
 
-    public Integer create(String name) {
+    public void create(String name) {
         if (activityRepository.existsByName(name)) {
             throw new ActivityServiceException("Unable to create the activity: name already in use.");
         }
@@ -29,8 +29,6 @@ public class ActivityService {
 
         activityRepository.saveAndFlush(activity);
         eventPublisher.publishEvent(new ActivityDataUpdatedEvent());
-
-        return activity.getId();
     }
 
     public void delete(String name) {

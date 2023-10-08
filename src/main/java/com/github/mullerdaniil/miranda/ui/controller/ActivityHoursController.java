@@ -20,8 +20,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.util.Callback;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.time.LocalDate;
 
@@ -75,10 +75,13 @@ public class ActivityHoursController {
         }
     }
 
-    @EventListener({
-            ActivityDataUpdatedEvent.class,
-            ActivityDataRefreshRequestEvent.class
-    })
+    @TransactionalEventListener(
+            value = {
+                    ActivityDataUpdatedEvent.class,
+                    ActivityDataRefreshRequestEvent.class
+            },
+            fallbackExecution = true
+    )
     public void refreshActivityNames() {
         var activityNames = activityService.findAll()
                 .stream()
@@ -89,10 +92,13 @@ public class ActivityHoursController {
         activityNamesListView.refresh();
     }
 
-    @EventListener({
-            HourSessionDataUpdatedEvent.class,
-            HourSessionDataRefreshRequestEvent.class
-    })
+    @TransactionalEventListener(
+            value = {
+                    HourSessionDataUpdatedEvent.class,
+                    HourSessionDataRefreshRequestEvent.class
+            },
+            fallbackExecution = true
+    )
     public void refreshHourSessions() {
         var hourSessions = hourSessionService.findByDate(datePicker.getValue());
         hourSessionsListView.setItems(observableArrayList(hourSessions));

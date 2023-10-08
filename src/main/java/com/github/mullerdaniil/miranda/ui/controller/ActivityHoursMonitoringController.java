@@ -12,8 +12,8 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.control.DatePicker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -45,11 +45,14 @@ public class ActivityHoursMonitoringController {
         drawChart();
     }
 
-    @EventListener({
-            HourSessionDataUpdatedEvent.class,
-            HourSessionDataRefreshRequestEvent.class,
-            MonitoringParametersUpdatedEvent.class
-    })
+    @TransactionalEventListener(
+            value = {
+                    HourSessionDataUpdatedEvent.class,
+                    HourSessionDataRefreshRequestEvent.class,
+                    MonitoringParametersUpdatedEvent.class
+            },
+            fallbackExecution = true
+    )
     public void drawChart() {
         hoursByActivityChart.setData(buildPieChartData());
     }

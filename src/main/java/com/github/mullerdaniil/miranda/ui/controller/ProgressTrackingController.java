@@ -19,8 +19,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.util.Callback;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -183,7 +183,7 @@ public class ProgressTrackingController {
                                             String unit) {
     }
 
-    @EventListener(TrackDataUpdatedEvent.class)
+    @TransactionalEventListener(TrackDataUpdatedEvent.class)
     public void reactToTracksDataUpdating(TrackDataUpdatedEvent event) {
         var selectedTrack = tracksListView.getSelectionModel().getSelectedItem();
 
