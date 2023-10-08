@@ -10,6 +10,13 @@ mark answers to them as memorized.
 - Icon and title of the application window.
 
 
+## [0.2.2] - 2023-10-09
+
+### Fixed
+
+- Incorrect displaying of the first Progress Point timestamp.
+
+
 ## [0.2.1] - 2023-10-07
 
 ### Changed
