@@ -8,6 +8,14 @@ All notable changes to this project will be documented in this file.
 mark answers to them as memorized.
 - Monitoring tools for services.
 - Icon and title of the application window.
+- Replace Progress Track ProgressBar with RingProgressIndicator.
+
+
+## [0.2.3] - 2023-10-10
+
+### Changed
+
+- Clear Progress Point progress text field after the input.
 
 
 ## [0.2.2] - 2023-10-09

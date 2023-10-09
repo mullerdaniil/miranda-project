@@ -85,6 +85,8 @@ public class ProgressTrackingController {
         } catch (ProgressPointServiceException e) {
             showExceptionDialog(e);
         }
+
+        progressPointProgressTextField.setText("");
     }
 
     private void deleteSelectedProgressPoint() {
