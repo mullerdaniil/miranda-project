@@ -9,6 +9,7 @@ spring:
       hibernate:
         hbm2ddl:
           auto: update
+        show_sql: true
     hibernate:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
@@ -18,3 +19,8 @@ logging:
       springframework:
         boot:
           autoconfigure: info
+question-training:
+  points:
+    up: 1
+    down: 5
+    max: 12

@@ -11,9 +11,9 @@
     </columnConstraints>
     <rowConstraints>
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-<!--        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>-->
     </rowConstraints>
 
     <fx:include source="ActivityHours.fxml" GridPane.columnIndex="0"/>
-    <fx:include source="ProgressTracking.fxml" GridPane.columnIndex="1"/>
+    <fx:include source="QuestionTraining.fxml" GridPane.columnIndex="1"/>
+    <fx:include source="ProgressTracking.fxml" GridPane.columnIndex="2"/>
 </GridPane>
