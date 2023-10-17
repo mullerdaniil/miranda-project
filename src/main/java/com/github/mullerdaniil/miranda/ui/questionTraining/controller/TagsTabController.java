@@ -1,10 +1,10 @@
 package com.github.mullerdaniil.miranda.ui.questionTraining.controller;
 
 import com.github.mullerdaniil.miranda.module.questionTraining.entity.Tag;
+import com.github.mullerdaniil.miranda.module.questionTraining.exception.TagServiceException;
 import com.github.mullerdaniil.miranda.module.questionTraining.service.TagService;
 import com.github.mullerdaniil.miranda.ui.questionTraining.converter.ColorConverter;
 import com.github.mullerdaniil.miranda.ui.questionTraining.event.TagsUpdatedEvent;
-import com.github.mullerdaniil.miranda.ui.util.DialogUtil;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -12,16 +12,14 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 import static com.github.mullerdaniil.miranda.ui.util.DialogUtil.showErrorDialog;
+import static com.github.mullerdaniil.miranda.ui.util.DialogUtil.showExceptionDialog;
 import static javafx.collections.FXCollections.observableList;
 
 @RequiredArgsConstructor
@@ -48,27 +46,33 @@ public class TagsTabController {
     }
 
     public void createNewTag() {
-        // TODO: 17.10.2023 exception handling
-        tagService.create(
-                tagNameTextField.getText(),
-                colorConverter.convertFrom(textColorColorPicker.getValue()),
-                colorConverter.convertFrom(backgroundColorColorPicker.getValue())
-        );
-        eventPublisher.publishEvent(new TagsUpdatedEvent());
-    }
-
-    public void editSelectedTag() {
-        // TODO: 17.10.2023 exception handling
-        var selectedTag = getSelectedTag();
-
-        if (selectedTag != null) {
-            tagService.update(
-                    selectedTag.getId(),
+        try {
+            tagService.create(
                     tagNameTextField.getText(),
                     colorConverter.convertFrom(textColorColorPicker.getValue()),
                     colorConverter.convertFrom(backgroundColorColorPicker.getValue())
             );
             eventPublisher.publishEvent(new TagsUpdatedEvent());
+        } catch (TagServiceException e) {
+            showExceptionDialog(e);
+        }
+    }
+
+    public void editSelectedTag() {
+        var selectedTag = getSelectedTag();
+
+        if (selectedTag != null) {
+            try {
+                tagService.update(
+                        selectedTag.getId(),
+                        tagNameTextField.getText(),
+                        colorConverter.convertFrom(textColorColorPicker.getValue()),
+                        colorConverter.convertFrom(backgroundColorColorPicker.getValue())
+                );
+                eventPublisher.publishEvent(new TagsUpdatedEvent());
+            } catch (TagServiceException e) {
+                showExceptionDialog(e);
+            }
         } else {
             showErrorDialog("Tag is not selected.");
         }
@@ -100,7 +104,7 @@ public class TagsTabController {
         }
     }
 
-    private class TagsListViewCellFactory implements Callback<ListView<Tag>, ListCell<Tag>> {
+    private static class TagsListViewCellFactory implements Callback<ListView<Tag>, ListCell<Tag>> {
         @Override
         public ListCell<Tag> call(ListView<Tag> param) {
             return new ListCell<>() {

@@ -55,10 +55,9 @@ public class QuestionsTabController {
         refreshTags();
     }
 
-    // onButton
     public void createNewQuestion() {
         try {
-            var createdQuestionId = questionService.create(
+            questionService.create(
                     questionTextArea.getText(),
                     answerTextArea.getText(),
                     getSelectedTags()
@@ -69,7 +68,6 @@ public class QuestionsTabController {
         }
     }
 
-    // onButton
     public void editSelectedQuestion() {
         var selectedQuestion = getSelectedQuestion();
         if (selectedQuestion != null) {
@@ -89,7 +87,6 @@ public class QuestionsTabController {
         }
     }
 
-    // onButton
     public void clearInput() {
         questionTextArea.setText("");
         answerTextArea.setText("");

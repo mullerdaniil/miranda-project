@@ -53,7 +53,7 @@ public class QuestionService {
     }
 
 
-    public Long create(String question, String answer, List<Tag> tags) {
+    public void create(String question, String answer, List<Tag> tags) {
         checkQuestionAndAnswerAreNotBlank(question, answer);
 
         var newQuestion = Question.builder()
@@ -65,8 +65,7 @@ public class QuestionService {
             newQuestion.addTag(tag);
         }
 
-        var createdQuestion = questionRepository.save(newQuestion);
-        return createdQuestion.getId();
+        questionRepository.save(newQuestion);
     }
 
     @Deprecated
