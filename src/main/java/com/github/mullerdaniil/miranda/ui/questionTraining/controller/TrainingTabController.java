@@ -4,7 +4,7 @@ import com.github.mullerdaniil.miranda.module.questionTraining.config.QuestionTr
 import com.github.mullerdaniil.miranda.module.questionTraining.entity.Question;
 import com.github.mullerdaniil.miranda.module.questionTraining.service.QuestionService;
 import com.github.mullerdaniil.miranda.module.questionTraining.service.TagService;
-import com.github.mullerdaniil.miranda.ui.questionTraining.event.QuestionEditedEvent;
+import com.github.mullerdaniil.miranda.ui.questionTraining.event.QuestionsUpdatedEvent;
 import com.github.mullerdaniil.miranda.ui.questionTraining.event.TagsUpdatedEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -88,7 +88,7 @@ public class TrainingTabController {
     }
 
     @EventListener({
-            QuestionEditedEvent.class,
+            QuestionsUpdatedEvent.class,
             TagsUpdatedEvent.class
     })
     public void resetQuestion() {

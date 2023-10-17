@@ -5,7 +5,7 @@ import com.github.mullerdaniil.miranda.module.questionTraining.entity.Tag;
 import com.github.mullerdaniil.miranda.module.questionTraining.exception.QuestionServiceException;
 import com.github.mullerdaniil.miranda.module.questionTraining.service.QuestionService;
 import com.github.mullerdaniil.miranda.module.questionTraining.service.TagService;
-import com.github.mullerdaniil.miranda.ui.questionTraining.event.QuestionEditedEvent;
+import com.github.mullerdaniil.miranda.ui.questionTraining.event.QuestionsUpdatedEvent;
 import com.github.mullerdaniil.miranda.ui.questionTraining.event.TagsUpdatedEvent;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -62,7 +62,7 @@ public class QuestionsTabController {
                     answerTextArea.getText(),
                     getSelectedTags()
             );
-            eventPublisher.publishEvent(new QuestionEditedEvent());
+            eventPublisher.publishEvent(new QuestionsUpdatedEvent());
         } catch (QuestionServiceException e) {
             showExceptionDialog(e);
         }
@@ -78,7 +78,7 @@ public class QuestionsTabController {
                         answerTextArea.getText(),
                         tagsListView.getSelectionModel().getSelectedItems()
                 );
-                eventPublisher.publishEvent(new QuestionEditedEvent());
+                eventPublisher.publishEvent(new QuestionsUpdatedEvent());
             } catch (QuestionServiceException e) {
                 showExceptionDialog(e);
             }
@@ -94,7 +94,7 @@ public class QuestionsTabController {
     }
 
 
-    @EventListener(QuestionEditedEvent.class)
+    @EventListener(QuestionsUpdatedEvent.class)
     public void refreshQuestions() {
         var previouslySelectedQuestion = getSelectedQuestion();
         questionsListView.setItems(observableList(questionService.findAll()));
