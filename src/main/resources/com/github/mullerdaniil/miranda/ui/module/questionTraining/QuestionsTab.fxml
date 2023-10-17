@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<Tab text="Questions" xmlns="http://javafx.com/javafx/17.0.2-ea"
+     xmlns:fx="http://javafx.com/fxml/1"
+     fx:controller="com.github.mullerdaniil.miranda.ui.module.questionTraining.controller.QuestionsTabController">
+    <VBox>
+        <VBox.margin>
+            <Insets>
+                <top>10</top>
+            </Insets>
+        </VBox.margin>
+
+        <VBox>
+            <Label text="Question">
+                <VBox.margin>
+                    <Insets>
+                        <top>10</top>
+                    </Insets>
+                </VBox.margin>
+            </Label>
+            <TextArea fx:id="questionTextArea" prefHeight="50"
+                      style="-fx-font-family: 'Lucida Console';">
+            </TextArea>
+
+            <Label text="Answer">
+                <VBox.margin>
+                    <Insets>
+                        <top>10</top>
+                    </Insets>
+                </VBox.margin>
+            </Label>
+            <TextArea fx:id="answerTextArea" prefHeight="180" style="-fx-font-family: 'Lucida Console';">
+            </TextArea>
+
+            <Label text="Tags">
+                <VBox.margin>
+                    <Insets>
+                        <top>10</top>
+                    </Insets>
+                </VBox.margin>
+            </Label>
+            <ListView fx:id="tagsListView" prefHeight="100" fixedCellSize="22">
+            </ListView>
+
+            <HBox spacing="5">
+                <VBox.margin>
+                    <Insets>
+                        <top>10</top>
+                    </Insets>
+                </VBox.margin>
+
+                <Button text="New" onAction="#createNewQuestion" style="-fx-background-color: -color-accent-muted;">
+                    <VBox.margin>
+                        <Insets>
+                            <top>10</top>
+                        </Insets>
+                    </VBox.margin>
+                </Button>
+
+                <Button text="Edit" onAction="#editSelectedQuestion" style="-fx-background-color: -color-accent-muted;">
+                    <VBox.margin>
+                        <Insets>
+                            <top>10</top>
+                        </Insets>
+                    </VBox.margin>
+                </Button>
+
+                <Button text="Clear" onAction="#clearInput" style="-fx-background-color: -color-success-muted;">
+                    <VBox.margin>
+                        <Insets>
+                            <top>10</top>
+                        </Insets>
+                    </VBox.margin>
+                </Button>
+            </HBox>
+
+
+            <Label text="Questions">
+                <VBox.margin>
+                    <Insets>
+                        <top>10</top>
+                    </Insets>
+                </VBox.margin>
+            </Label>
+            <ListView fx:id="questionsListView" prefHeight="100" fixedCellSize="22">
+            </ListView>
+        </VBox>
+    </VBox>
+</Tab>

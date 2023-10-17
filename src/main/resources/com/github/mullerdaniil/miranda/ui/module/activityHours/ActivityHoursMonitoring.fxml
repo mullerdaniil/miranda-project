@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.github.mullerdaniil.miranda.ui.module.activityHours.controller.ActivityHoursMonitoringController">
+    <GridPane hgap="10.0" vgap="10.0" prefHeight="69.0" prefWidth="502.0">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES"/>
+            <ColumnConstraints hgrow="SOMETIMES"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints vgrow="SOMETIMES"/>
+            <RowConstraints vgrow="SOMETIMES"/>
+        </rowConstraints>
+
+        <Label GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0">From</Label>
+        <DatePicker fx:id="fromDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+        <Label GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="1">To</Label>
+        <DatePicker fx:id="toDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+        </padding>
+    </GridPane>
+
+    <LineChart>
+        <xAxis>
+            <CategoryAxis side="BOTTOM"/>
+        </xAxis>
+        <yAxis>
+            <NumberAxis side="BOTTOM"/>
+        </yAxis>
+    </LineChart>
+    <PieChart fx:id="hoursByActivityChart">
+    </PieChart>
+</VBox>

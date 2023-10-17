@@ -13,7 +13,7 @@
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
     </rowConstraints>
 
-    <fx:include source="controller/ActivityHours.fxml" GridPane.columnIndex="0"/>
-    <fx:include source="questionTraining/controller/QuestionTrainingMainView.fxml" GridPane.columnIndex="1"/>
-    <fx:include source="controller/ProgressTracking.fxml" GridPane.columnIndex="2"/>
+    <fx:include source="module/activityHours/ActivityHours.fxml" GridPane.columnIndex="0"/>
+    <fx:include source="module/questionTraining/QuestionTrainingMainView.fxml" GridPane.columnIndex="1"/>
+    <fx:include source="module/progressTracking/ProgressTracking.fxml" GridPane.columnIndex="2"/>
 </GridPane>

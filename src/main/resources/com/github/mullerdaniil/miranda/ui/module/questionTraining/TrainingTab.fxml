@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Text?>
+<Tab text="Training" xmlns="http://javafx.com/javafx/17.0.2-ea"
+     xmlns:fx="http://javafx.com/fxml/1"
+     fx:controller="com.github.mullerdaniil.miranda.ui.module.questionTraining.controller.TrainingTabController">
+
+    <VBox fx:id="trainingTabVBox">
+        <Label text="Filters:">
+            <VBox.margin>
+                <Insets>
+                    <top>10</top>
+                </Insets>
+            </VBox.margin>
+        </Label>
+
+        <GridPane hgap="10" vgap="5">
+            <Label text="Lowest points:" GridPane.rowIndex="0" GridPane.columnIndex="0">
+            </Label>
+            <Spinner fx:id="maxPointsFilterSpinner" min="0" max="12" GridPane.rowIndex="0" GridPane.columnIndex="1">
+            </Spinner>
+            <Label text="Tags:" GridPane.rowIndex="1" GridPane.columnIndex="0">
+            </Label>
+            <MenuButton fx:id="availableTagsMenuButton" GridPane.rowIndex="1" GridPane.columnIndex="1">
+            </MenuButton>
+        </GridPane>
+
+        <Label text="Tags">
+            <VBox.margin>
+                <Insets>
+                    <top>10</top>
+                </Insets>
+            </VBox.margin>
+        </Label>
+
+        <FlowPane fx:id="currentQuestionTagsFlowPane" hgap="5">
+        </FlowPane>
+
+        <BorderPane>
+            <VBox.margin>
+                <Insets>
+                    <top>10</top>
+                </Insets>
+            </VBox.margin>
+
+            <left>
+                <Label text="Question">
+                </Label>
+            </left>
+
+            <right>
+                <Label fx:id="currentQuestionPointsLabel">
+                </Label>
+            </right>
+        </BorderPane>
+        <VBox prefHeight="100" alignment="CENTER" styleClass="list-view">
+            <Text fx:id="questionText" style="-fx-font-family: 'Lucida Console';">
+            </Text>
+        </VBox>
+
+
+        <Label text="Answer">
+            <VBox.margin>
+                <Insets>
+                    <top>10</top>
+                </Insets>
+            </VBox.margin>
+        </Label>
+        <VBox fx:id="answerVBox" prefHeight="300" alignment="CENTER" styleClass="list-view">
+            <Text fx:id="answerText" style="-fx-font-family: 'Lucida Console';">
+            </Text>
+        </VBox>
+
+        <BorderPane>
+            <VBox.margin>
+                <Insets>
+                    <top>10</top>
+                </Insets>
+            </VBox.margin>
+            <left>
+                <Button text="Yes (A)"
+                        style="-fx-background-color: -color-success-muted;"
+                        onAction="#setQuestionAnswered">
+                </Button>
+            </left>
+            <center>
+                <Button text="Show Answer (S)"
+                        style="-fx-background-color: -color-accent-muted;"
+                        onAction="#showAnswer">
+                </Button>
+            </center>
+            <right>
+                <Button text="No (D)"
+                        style="-fx-background-color: -color-danger-muted;"
+                        onAction="#setQuestionNotAnswered">
+                </Button>
+            </right>
+        </BorderPane>
+    </VBox>
+</Tab>
