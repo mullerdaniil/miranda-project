@@ -1,4 +1,4 @@
-package com.github.mullerdaniil.miranda.ui.module.controller;
+package com.github.mullerdaniil.miranda.ui.module.progressTracking.controller;
 
 import com.github.mullerdaniil.miranda.module.progressTracking.entity.ProgressPoint;
 import com.github.mullerdaniil.miranda.module.progressTracking.entity.Track;
