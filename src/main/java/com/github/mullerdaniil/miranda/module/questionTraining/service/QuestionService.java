@@ -30,25 +30,21 @@ public class QuestionService {
         return questionRepository.findAll();
     }
 
-    public void update(Long questionId,
+    public void update(Long id,
                        String question,
                        String answer,
                        List<Tag> tags) {
+        var existingQuestion = questionRepository.findById(id).orElseThrow(
+                () -> new QuestionServiceException("Question with id = %d not found.".formatted(id))
+        );
 
-        // TODO: 17.10.2023 use orElseThrow(...) instead of maybe... everywhere!
+        checkQuestionAndAnswerAreNotBlank(question, answer);
 
-        var maybeQuestion = questionRepository.findById(questionId);
-        if (maybeQuestion.isPresent()) {
-            var exisitingQuestion = maybeQuestion.get();
-            exisitingQuestion.setQuestion(question);
-            exisitingQuestion.setAnswer(answer);
-
-            exisitingQuestion.getQuestionTags().clear();
-            for (var tag : tags) {
-                exisitingQuestion.addTag(tag);
-            }
-        } else {
-            throw new QuestionServiceException("Question not found.");
+        existingQuestion.setQuestion(question);
+        existingQuestion.setAnswer(answer);
+        existingQuestion.getQuestionTags().clear();
+        for (var tag : tags) {
+            existingQuestion.addTag(tag);
         }
     }
 
@@ -56,32 +52,10 @@ public class QuestionService {
         questionRepository.deleteById(id);
     }
 
-/*    @Deprecated
-    public void update(Long questionId,
-                       String question,
-                       String answer,
-                       List<String> tagNames) {
-        var maybeQuestion = questionRepository.findById(questionId);
-        if (maybeQuestion.isPresent()) {
-            var exisitingQuestion = maybeQuestion.get();
-            exisitingQuestion.setQuestion(question);
-            exisitingQuestion.setAnswer(answer);
-
-            for (var tagName : tagNames) {
-                var maybeTag = tagRepository.findByName(tagName);
-                if (maybeTag.isPresent()) {
-                    var tag = maybeTag.get();
-                    exisitingQuestion.addTag(tag);
-                } else {
-                    throw new QuestionServiceException("Tag not found.");
-                }
-            }
-        } else {
-            throw new QuestionServiceException("Question not found.");
-        }
-    }*/
 
     public Long create(String question, String answer, List<Tag> tags) {
+        checkQuestionAndAnswerAreNotBlank(question, answer);
+
         var newQuestion = Question.builder()
                 .question(question)
                 .answer(answer)
@@ -97,6 +71,8 @@ public class QuestionService {
 
     @Deprecated
     public void create(String question, String answer, Set<String> tagNames) {
+        checkQuestionAndAnswerAreNotBlank(question, answer);
+
         var newQuestion = Question.builder()
                 .question(question)
                 .answer(answer)
@@ -114,47 +90,11 @@ public class QuestionService {
         questionRepository.save(newQuestion);
     }
 
-    @Deprecated
-    public void create(String question, String answer) {
-        var questionToSave = Question.builder()
-                .question(question)
-                .answer(answer)
-                .build();
-
-        questionRepository.save(questionToSave);
-    }
-
-    @Deprecated
-    public void addTag(Long id, Tag tag) {
-        var maybeQuestion = questionRepository.findById(id);
-        if (maybeQuestion.isEmpty()) {
-            throw new QuestionServiceException("Question not found.");
-        }
-
-        var question = maybeQuestion.get();
-        question.addTag(tag);
-//        questionRepository.save(question);
-    }
-
-    @Deprecated
-    public void removeTag(Long id, Tag tag) {
-        var maybeQuestion = questionRepository.findById(id);
-        if (maybeQuestion.isEmpty()) {
-            throw new QuestionServiceException("Question not found.");
-        }
-
-        var question = maybeQuestion.get();
-        question.removeTag(tag);
-//        questionRepository.save(question);
-    }
-
     public void setQuestionAnswered(Long id, boolean answered) {
-        var maybeQuestion = questionRepository.findById(id);
-        if (maybeQuestion.isEmpty()) {
-            throw new QuestionServiceException("Question not found.");
-        }
+        var question = questionRepository.findById(id).orElseThrow(
+                () -> new QuestionServiceException("Question with id = %d not found.".formatted(id))
+        );
 
-        var question = maybeQuestion.get();
         int oldPointsValue = question.getPoints();
         int newPointsValue;
 
@@ -175,5 +115,13 @@ public class QuestionService {
         question.setPoints(newPointsValue);
     }
 
-    // TODO: 16.10.2023 method for question/answer not blank check
+    private static void checkQuestionAndAnswerAreNotBlank(String question, String answer) {
+        if (question.isBlank()) {
+            throw new QuestionServiceException("Question text must not be blank.");
+        }
+
+        if (answer.isBlank()) {
+            throw new QuestionServiceException("Answer text must not be blank.");
+        }
+    }
 }

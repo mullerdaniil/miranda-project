@@ -29,20 +29,11 @@ public class TagService {
         return tagRepository.findAll();
     }
 
-    @Deprecated
-    public void create(String name, Color color) {
-        var tag = Tag.builder()
-                .name(name)
-//                .color(color)
-                .build();
-
-        tagRepository.save(tag);
-    }
-
     public void create(String name,
                        Color textColor,
                        Color backgroundColor) {
-        // TODO: 17.10.2023 check name uniqueness
+        checkNameIsValid(name);
+
         var tag = Tag.builder()
                 .name(name)
                 .textColor(textColor)
@@ -56,17 +47,24 @@ public class TagService {
                        String name,
                        Color textColor,
                        Color backgroundColor) {
-        var maybeTag = tagRepository.findById(id);
+        var tag = tagRepository.findById(id).orElseThrow(
+                () -> new TagServiceException("Tag with id = %d not found.".formatted(id))
+        );
 
-        if (maybeTag.isPresent()) {
-            var tag = maybeTag.get();
+        checkNameIsValid(name);
 
-            tag.setName(name);
-            tag.setTextColor(textColor);
-            tag.setBackgroundColor(backgroundColor);
-        } else {
-            // TODO: 17.10.2023 fix exception message everywhere! (add id)
-            throw new TagServiceException("Tag with id = %d not found.".formatted(id));
+        tag.setName(name);
+        tag.setTextColor(textColor);
+        tag.setBackgroundColor(backgroundColor);
+    }
+
+    private void checkNameIsValid(String name) {
+        if (name.isBlank()) {
+            throw new TagServiceException("Tag name must not be blank.");
+        }
+
+        if (tagRepository.existsByName(name)) {
+            throw new TagServiceException("Tag with name = %s already exists.".formatted(name));
         }
     }
 }
