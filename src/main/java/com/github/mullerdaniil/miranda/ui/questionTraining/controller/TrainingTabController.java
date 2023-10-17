@@ -1,11 +1,11 @@
-package com.github.mullerdaniil.miranda.ui.controller;
+package com.github.mullerdaniil.miranda.ui.questionTraining.controller;
 
 import com.github.mullerdaniil.miranda.module.questionTraining.config.QuestionTrainingProperties;
 import com.github.mullerdaniil.miranda.module.questionTraining.entity.Question;
-import com.github.mullerdaniil.miranda.module.questionTraining.entity.Tag;
 import com.github.mullerdaniil.miranda.module.questionTraining.service.QuestionService;
 import com.github.mullerdaniil.miranda.module.questionTraining.service.TagService;
-import javafx.collections.ObservableList;
+import com.github.mullerdaniil.miranda.ui.questionTraining.event.QuestionEditedEvent;
+import com.github.mullerdaniil.miranda.ui.questionTraining.event.TagsUpdatedEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -16,25 +16,21 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static com.github.mullerdaniil.miranda.ui.util.ColorUtil.toHexString;
 
 @RequiredArgsConstructor
 @Component
-public class QuestionTrainingController {
+public class TrainingTabController {
     private final QuestionService questionService;
     private final TagService tagService;
     private final QuestionTrainingProperties questionTrainingProperties;
 
-    @FXML
-    private TextArea createQuestionTextArea;
-    @FXML
-    private TextArea createAnswerTextArea;
     @FXML
     private FlowPane currentQuestionTagsFlowPane;
     @FXML
@@ -51,20 +47,19 @@ public class QuestionTrainingController {
     private MenuButton availableTagsMenuButton;
     @FXML
     private Spinner<Integer> maxPointsFilterSpinner;
-    @FXML
-    private ListView<String> createQuestionTagNamesListView;
 
     private final TagCheckBoxListener tagCheckBoxListener = new TagCheckBoxListener();
     private Question currentQuestion = null;
+
+    // TODO: 17.10.2023 use set of tags instead
     private Set<String> chosenTagNames = new HashSet<>();
 
     public void initialize() {
         maxPointsFilterSpinner.getValueFactory().setValue(questionTrainingProperties.points().max());
-        createQuestionTagNamesListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         for (var tag : tagService.findAll()) {
             chosenTagNames.add(tag.getName());
         }
-        loadRandomQuestion();
+        setRandomQuestion();
         refreshAvailableTags();
         trainingTabVBox.setOnKeyPressed(new TrainingTabVBoxKeyListener());
     }
@@ -73,14 +68,14 @@ public class QuestionTrainingController {
         if (currentQuestion != null) {
             questionService.setQuestionAnswered(currentQuestion.getId(), true);
         }
-        loadRandomQuestion();
+        setRandomQuestion();
     }
 
     public void setQuestionNotAnswered() {
         if (currentQuestion != null) {
             questionService.setQuestionAnswered(currentQuestion.getId(), false);
         }
-        loadRandomQuestion();
+        setRandomQuestion();
     }
 
     public void showAnswer() {
@@ -92,35 +87,36 @@ public class QuestionTrainingController {
         answerVBox.setStyle(null);
     }
 
-    private void loadRandomQuestion() {
-        var maybeCurrentQuestion = questionService.getRandomByMaxPointsAndTagNames(maxPointsFilterSpinner.getValue(), chosenTagNames);
-        if (maybeCurrentQuestion.isPresent()) {
-            currentQuestion = maybeCurrentQuestion.get();
+    @EventListener({
+            QuestionEditedEvent.class,
+            TagsUpdatedEvent.class
+    })
+    public void resetQuestion() {
+        currentQuestion = null;
+        loadCurrentQuestion();
+    }
+
+    private void setRandomQuestion() {
+        currentQuestion = questionService
+                .getRandomByMaxPointsAndTagNames(maxPointsFilterSpinner.getValue(), chosenTagNames)
+                .orElse(null);
+
+        loadCurrentQuestion();
+    }
+
+    private void loadCurrentQuestion() {
+        if (currentQuestion != null) {
             questionText.setText(currentQuestion.getQuestion());
             currentQuestionPointsLabel.setText(String.valueOf(currentQuestion.getPoints()));
             hideAnswer();
-            loadCurrentQuestionTags();
         } else {
-            currentQuestion = null;
             questionText.setText("");
-            answerText.setText("");
             currentQuestionPointsLabel.setText("");
-            loadCurrentQuestionTags();
             showAnswer();
         }
-    }
 
-    public void createNewQuestion() {
-        String questionText = this.createQuestionTextArea.getText();
-        String answerText = this.createAnswerTextArea.getText();
-        var selectedTagNames = new HashSet<>(createQuestionTagNamesListView.getSelectionModel().getSelectedItems());
-
-        questionService.save(questionText, answerText, selectedTagNames);
-    }
-
-    private void hideAnswer() {
         answerText.setText("");
-        answerVBox.setStyle("-fx-background-color: -color-warning-muted;");
+        loadCurrentQuestionTags();
     }
 
     private void loadCurrentQuestionTags() {
@@ -133,24 +129,32 @@ public class QuestionTrainingController {
             for (var tag : tags) {
                 var tagLabel = new Label(tag.getName());
                 tagLabel.setPadding(new Insets(0, 5, 0, 5));
-                tagLabel.setStyle("-fx-border-radius: 15; -fx-background-color: %s;".formatted(toHexString(tag.getColor())));
+                tagLabel.setStyle("-fx-border-radius: 15; -fx-background-color: %s; -fx-text-fill: %s"
+                        .formatted(
+                                toHexString(tag.getBackgroundColor()),
+                                toHexString(tag.getTextColor())
+                        ));
                 questionTagsList.add(tagLabel);
             }
         }
     }
 
-    private void refreshAvailableTags() {
+    private void hideAnswer() {
+        answerText.setText("");
+        answerVBox.setStyle("-fx-background-color: -color-warning-muted;");
+    }
+
+    @EventListener(TagsUpdatedEvent.class)
+    public void refreshAvailableTags() {
         var tags = tagService.findAll();
         Set<String> newChosenTagNames = new HashSet<>();
         availableTagsMenuButton.getItems().clear();
-        createQuestionTagNamesListView.getItems().clear();
 
         for (var tag : tags) {
             var checkBox = new CheckBox(tag.getName());
             checkBox.setOnAction(tagCheckBoxListener);
             var customMenuItem = new CustomMenuItem(checkBox);
             availableTagsMenuButton.getItems().add(customMenuItem);
-            createQuestionTagNamesListView.getItems().add(tag.getName());
 
             if (chosenTagNames.contains(tag.getName())) {
                 checkBox.setSelected(true);

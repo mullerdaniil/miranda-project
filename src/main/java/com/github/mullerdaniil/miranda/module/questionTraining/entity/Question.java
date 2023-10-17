@@ -44,13 +44,13 @@ public class Question {
     public void addTag(Tag tag) {
         var questionTag = buildQuestionTag(this, tag);
         questionTags.add(questionTag);
-        tag.getQuestionTags().add(questionTag);
+//        tag.getQuestionTags().add(questionTag);
     }
 
     public void removeTag(Tag tag) {
         var questionTag = buildQuestionTag(this, tag);
         questionTags.remove(questionTag);
-        tag.getQuestionTags().remove(questionTag);
+//        tag.getQuestionTags().remove(questionTag);
         questionTag.setQuestion(null);
         questionTag.setTag(null);
     }

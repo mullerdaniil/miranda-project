@@ -4,6 +4,7 @@ import com.github.mullerdaniil.miranda.module.questionTraining.entity.Question;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -11,11 +12,14 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     @Query("from Question order by random() limit 1")
     Question getRandom();
 
-    @Query("""
+/*    @Query("""
            from Question q
            left join fetch q.questionTags qt
-           where q.id = :id""")
+           where q.id = :id""")*/
     Optional<Question> findById(Long id);
+
+    // TODO: 16.10.2023 order by update timestamp
+    List<Question> findAll();
 
     @Query("""
            select q

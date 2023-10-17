@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -27,7 +26,77 @@ public class QuestionService {
         return questionRepository.getRandomByMaxPointsAndTagNames(maxPoints, tagNames);
     }
 
-    public void save(String question, String answer, Set<String> tagNames) {
+    public List<Question> findAll() {
+        return questionRepository.findAll();
+    }
+
+    public void update(Long questionId,
+                       String question,
+                       String answer,
+                       List<Tag> tags) {
+
+        // TODO: 17.10.2023 use orElseThrow(...) instead of maybe... everywhere!
+
+        var maybeQuestion = questionRepository.findById(questionId);
+        if (maybeQuestion.isPresent()) {
+            var exisitingQuestion = maybeQuestion.get();
+            exisitingQuestion.setQuestion(question);
+            exisitingQuestion.setAnswer(answer);
+
+            exisitingQuestion.getQuestionTags().clear();
+            for (var tag : tags) {
+                exisitingQuestion.addTag(tag);
+            }
+        } else {
+            throw new QuestionServiceException("Question not found.");
+        }
+    }
+
+    public void deleteById(Long id) {
+        questionRepository.deleteById(id);
+    }
+
+/*    @Deprecated
+    public void update(Long questionId,
+                       String question,
+                       String answer,
+                       List<String> tagNames) {
+        var maybeQuestion = questionRepository.findById(questionId);
+        if (maybeQuestion.isPresent()) {
+            var exisitingQuestion = maybeQuestion.get();
+            exisitingQuestion.setQuestion(question);
+            exisitingQuestion.setAnswer(answer);
+
+            for (var tagName : tagNames) {
+                var maybeTag = tagRepository.findByName(tagName);
+                if (maybeTag.isPresent()) {
+                    var tag = maybeTag.get();
+                    exisitingQuestion.addTag(tag);
+                } else {
+                    throw new QuestionServiceException("Tag not found.");
+                }
+            }
+        } else {
+            throw new QuestionServiceException("Question not found.");
+        }
+    }*/
+
+    public Long create(String question, String answer, List<Tag> tags) {
+        var newQuestion = Question.builder()
+                .question(question)
+                .answer(answer)
+                .build();
+
+        for (var tag : tags) {
+            newQuestion.addTag(tag);
+        }
+
+        var createdQuestion = questionRepository.save(newQuestion);
+        return createdQuestion.getId();
+    }
+
+    @Deprecated
+    public void create(String question, String answer, Set<String> tagNames) {
         var newQuestion = Question.builder()
                 .question(question)
                 .answer(answer)
@@ -45,7 +114,8 @@ public class QuestionService {
         questionRepository.save(newQuestion);
     }
 
-    public void save(String question, String answer) {
+    @Deprecated
+    public void create(String question, String answer) {
         var questionToSave = Question.builder()
                 .question(question)
                 .answer(answer)
@@ -54,6 +124,7 @@ public class QuestionService {
         questionRepository.save(questionToSave);
     }
 
+    @Deprecated
     public void addTag(Long id, Tag tag) {
         var maybeQuestion = questionRepository.findById(id);
         if (maybeQuestion.isEmpty()) {
@@ -65,6 +136,7 @@ public class QuestionService {
 //        questionRepository.save(question);
     }
 
+    @Deprecated
     public void removeTag(Long id, Tag tag) {
         var maybeQuestion = questionRepository.findById(id);
         if (maybeQuestion.isEmpty()) {
@@ -102,4 +174,6 @@ public class QuestionService {
 
         question.setPoints(newPointsValue);
     }
+
+    // TODO: 16.10.2023 method for question/answer not blank check
 }

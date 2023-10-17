@@ -6,11 +6,9 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.awt.*;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
-@ToString(of = {"name", "color"})
-@EqualsAndHashCode(of = "name")
+@ToString(of = "name")
+@EqualsAndHashCode(of = "id")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,15 +23,18 @@ public class Tag {
     private String name;
 
     @Column(nullable = false)
-    private Color color;
+    private Color textColor;
 
-    @Builder.Default
+    @Column(nullable = false)
+    private Color backgroundColor;
+
+/*    @Builder.Default
     @OneToMany(
             mappedBy = "tag",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<QuestionTag> questionTags = new ArrayList<>();
+    private List<QuestionTag> questionTags = new ArrayList<>();*/
 
     @CreationTimestamp
     private ZonedDateTime creationTime;
